@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7Wi-kl-lfQ">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="Tcg-pd-jqg">
+            <objects>
+                <navigationController id="7Wi-kl-lfQ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="bFX-Td-ity">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="uZo-HL-T5u"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jqf-Eh-elO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1083" y="295"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
+                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S4y-P0-d2b">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" white="0.90484022556390975" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="S4y-P0-d2b" secondAttribute="height" multiplier="16:9" id="a6N-rg-AUH"/>
+                                    <constraint firstAttribute="height" constant="154" id="e6f-L6-c06"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                <state key="normal" title="Pick a video">
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="a6N-rg-AUH"/>
+                                        <exclude reference="e6f-L6-c06"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="a6N-rg-AUH"/>
+                                        <include reference="e6f-L6-c06"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="chooseSecondVideo:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="byi-hr-hIJ"/>
+                                </connections>
+                            </button>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ii9-ox-UQb">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G5p-fe-nRO">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" white="0.90484022556390975" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="154" id="787-Bk-dJh"/>
+                                    <constraint firstAttribute="width" secondItem="G5p-fe-nRO" secondAttribute="height" multiplier="16:9" id="va3-Kz-hGp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                <state key="normal" title="Pick a video">
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="787-Bk-dJh"/>
+                                        <exclude reference="va3-Kz-hGp"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="787-Bk-dJh"/>
+                                        <include reference="va3-Kz-hGp"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="chooseFirstVideo:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Ybs-Bf-lT7"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="S4y-P0-d2b" firstAttribute="top" secondItem="ii9-ox-UQb" secondAttribute="bottom" constant="8" id="4G2-PK-iZR"/>
+                            <constraint firstAttribute="centerX" secondItem="S4y-P0-d2b" secondAttribute="centerX" id="Qf8-A8-vqy"/>
+                            <constraint firstAttribute="centerX" secondItem="ii9-ox-UQb" secondAttribute="centerX" id="giR-gS-C3L"/>
+                            <constraint firstItem="G5p-fe-nRO" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="40" id="gpS-Uk-teh">
+                                <variation key="widthClass=compact" constant="36"/>
+                            </constraint>
+                            <constraint firstAttribute="centerX" secondItem="G5p-fe-nRO" secondAttribute="centerX" constant="7" id="hXx-8P-H7t">
+                                <variation key="widthClass=compact" constant="0.0"/>
+                            </constraint>
+                            <constraint firstItem="ii9-ox-UQb" firstAttribute="top" secondItem="G5p-fe-nRO" secondAttribute="bottom" constant="8" id="iaD-Yh-s1u"/>
+                            <constraint firstItem="ii9-ox-UQb" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" id="jJf-Fv-26Q"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="S4y-P0-d2b" secondAttribute="bottom" constant="36" id="nCw-DQ-ECx"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="S4y-P0-d2b"/>
+                                <exclude reference="ii9-ox-UQb"/>
+                                <exclude reference="G5p-fe-nRO"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="gpS-Uk-teh"/>
+                                <exclude reference="hXx-8P-H7t"/>
+                                <exclude reference="giR-gS-C3L"/>
+                                <exclude reference="iaD-Yh-s1u"/>
+                                <exclude reference="jJf-Fv-26Q"/>
+                                <exclude reference="4G2-PK-iZR"/>
+                                <exclude reference="Qf8-A8-vqy"/>
+                                <exclude reference="nCw-DQ-ECx"/>
+                            </mask>
+                        </variation>
+                        <variation key="widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="S4y-P0-d2b"/>
+                                <include reference="ii9-ox-UQb"/>
+                                <include reference="G5p-fe-nRO"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="gpS-Uk-teh"/>
+                                <include reference="hXx-8P-H7t"/>
+                                <include reference="giR-gS-C3L"/>
+                                <include reference="iaD-Yh-s1u"/>
+                                <include reference="jJf-Fv-26Q"/>
+                                <include reference="4G2-PK-iZR"/>
+                                <include reference="Qf8-A8-vqy"/>
+                                <include reference="nCw-DQ-ECx"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" id="Y5k-sw-wXW">
+                        <barButtonItem key="rightBarButtonItem" title="Play" id="9ra-cq-A25">
+                            <connections>
+                                <action selector="playAction:" destination="vXZ-lx-hvc" id="2UH-gz-33L"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="firstVideoButton" destination="G5p-fe-nRO" id="s1K-MB-slH"/>
+                        <outlet property="secondVideoButton" destination="S4y-P0-d2b" id="IDW-Ed-dx5"/>
+                        <outlet property="transitionsScrollView" destination="ii9-ox-UQb" id="MFI-Wh-aVU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-352.5" y="295"/>
+        </scene>
+    </scenes>
+</document>
