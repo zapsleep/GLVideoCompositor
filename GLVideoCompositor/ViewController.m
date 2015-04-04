@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <AVKit/AVKit.h>
 
 #import "UIButton+PHAsset.h"
 
@@ -36,6 +37,8 @@ typedef NS_ENUM(NSUInteger, GMAVideoNumber) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    self.navigationController.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -59,6 +62,20 @@ typedef NS_ENUM(NSUInteger, GMAVideoNumber) {
 #pragma mark - Actions
 
 - (IBAction)playAction:(id)sender {
+    if (!(self.firstVideoAsset && self.secondVideoAsset)) {
+        [[[UIAlertView alloc] initWithTitle:@"Need more assets"
+                                    message:@"You must first pick two videos"
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
+    } else {
+        AVPlayerViewController *playerVC = [[AVPlayerViewController alloc] init];
+        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:self.firstVideoAsset];
+        AVPlayer *player = [AVPlayer playerWithPlayerItem:playerItem];
+        playerVC.player = player;
+        
+        [self presentViewController:playerVC animated:YES completion:nil];
+    }
 }
 
 - (IBAction)chooseFirstVideo:(id)sender {
@@ -121,6 +138,10 @@ typedef NS_ENUM(NSUInteger, GMAVideoNumber) {
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController *)navigationController {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

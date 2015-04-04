@@ -9,6 +9,7 @@
         <scene sceneID="Tcg-pd-jqg">
             <objects>
                 <navigationController id="7Wi-kl-lfQ" sceneMemberID="viewController">
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="bFX-Td-ity">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -115,14 +116,14 @@
                                 <exclude reference="G5p-fe-nRO"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="nCw-DQ-ECx"/>
                                 <exclude reference="gpS-Uk-teh"/>
                                 <exclude reference="hXx-8P-H7t"/>
+                                <exclude reference="4G2-PK-iZR"/>
+                                <exclude reference="Qf8-A8-vqy"/>
                                 <exclude reference="giR-gS-C3L"/>
                                 <exclude reference="iaD-Yh-s1u"/>
                                 <exclude reference="jJf-Fv-26Q"/>
-                                <exclude reference="4G2-PK-iZR"/>
-                                <exclude reference="Qf8-A8-vqy"/>
-                                <exclude reference="nCw-DQ-ECx"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -132,14 +133,14 @@
                                 <include reference="G5p-fe-nRO"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="nCw-DQ-ECx"/>
                                 <include reference="gpS-Uk-teh"/>
                                 <include reference="hXx-8P-H7t"/>
+                                <include reference="4G2-PK-iZR"/>
+                                <include reference="Qf8-A8-vqy"/>
                                 <include reference="giR-gS-C3L"/>
                                 <include reference="iaD-Yh-s1u"/>
                                 <include reference="jJf-Fv-26Q"/>
-                                <include reference="4G2-PK-iZR"/>
-                                <include reference="Qf8-A8-vqy"/>
-                                <include reference="nCw-DQ-ECx"/>
                             </mask>
                         </variation>
                     </view>

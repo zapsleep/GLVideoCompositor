@@ -19,6 +19,7 @@
 		86B21C2E1ACFFC45000CECB6 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B21C2D1ACFFC45000CECB6 /* AVFoundation.framework */; };
 		86B21C301AD0003D000CECB6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B21C2F1AD0003D000CECB6 /* MobileCoreServices.framework */; };
 		86B21C331AD00708000CECB6 /* UIButton+PHAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B21C321AD00708000CECB6 /* UIButton+PHAsset.m */; };
+		86B21C371AD03485000CECB6 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B21C361AD03485000CECB6 /* AVKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		86B21C2F1AD0003D000CECB6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		86B21C311AD00708000CECB6 /* UIButton+PHAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+PHAsset.h"; sourceTree = "<group>"; };
 		86B21C321AD00708000CECB6 /* UIButton+PHAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+PHAsset.m"; sourceTree = "<group>"; };
+		86B21C361AD03485000CECB6 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86B21C371AD03485000CECB6 /* AVKit.framework in Frameworks */,
 				86B21C301AD0003D000CECB6 /* MobileCoreServices.framework in Frameworks */,
 				86B21C2E1ACFFC45000CECB6 /* AVFoundation.framework in Frameworks */,
 				86B21C2C1ACFF8D9000CECB6 /* OpenGLES.framework in Frameworks */,
@@ -78,10 +81,7 @@
 		86B21BF71ACFF6B3000CECB6 = {
 			isa = PBXGroup;
 			children = (
-				86B21C2F1AD0003D000CECB6 /* MobileCoreServices.framework */,
-				86B21C2D1ACFFC45000CECB6 /* AVFoundation.framework */,
-				86B21C2B1ACFF8D9000CECB6 /* OpenGLES.framework */,
-				86B21C291ACFF86B000CECB6 /* Photos.framework */,
+				86B21C381AD0348B000CECB6 /* Frameworks */,
 				86B21C021ACFF6B3000CECB6 /* GLVideoCompositor */,
 				86B21C1C1ACFF6B3000CECB6 /* GLVideoCompositorTests */,
 				86B21C011ACFF6B3000CECB6 /* Products */,
@@ -100,6 +100,7 @@
 		86B21C021ACFF6B3000CECB6 /* GLVideoCompositor */ = {
 			isa = PBXGroup;
 			children = (
+				86B21C351AD0346E000CECB6 /* Video composition */,
 				86B21C341AD0070D000CECB6 /* Helpers */,
 				86B21C071ACFF6B3000CECB6 /* AppDelegate.h */,
 				86B21C081ACFF6B3000CECB6 /* AppDelegate.m */,
@@ -148,6 +149,25 @@
 			name = Helpers;
 			sourceTree = "<group>";
 		};
+		86B21C351AD0346E000CECB6 /* Video composition */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Video composition";
+			sourceTree = "<group>";
+		};
+		86B21C381AD0348B000CECB6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				86B21C361AD03485000CECB6 /* AVKit.framework */,
+				86B21C2F1AD0003D000CECB6 /* MobileCoreServices.framework */,
+				86B21C2D1ACFFC45000CECB6 /* AVFoundation.framework */,
+				86B21C2B1ACFF8D9000CECB6 /* OpenGLES.framework */,
+				86B21C291ACFF86B000CECB6 /* Photos.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -192,6 +212,7 @@
 		86B21BF81ACFF6B3000CECB6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = GRU;
 				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Mikhail Grushin";
 				TargetAttributes = {
@@ -442,6 +463,7 @@
 				86B21C251ACFF6B3000CECB6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		86B21C261ACFF6B3000CECB6 /* Build configuration list for PBXNativeTarget "GLVideoCompositorTests" */ = {
 			isa = XCConfigurationList;
@@ -450,6 +472,7 @@
 				86B21C281ACFF6B3000CECB6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
