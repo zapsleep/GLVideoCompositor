@@ -33,10 +33,12 @@
 }
 
 - (CGSize)properNaturalSize {
-    if (self.naturalSize.width >= self.naturalSize.height) {
-        return self.naturalSize;
-    } else {
+    if (self.preferredTransform.a == 0.f && self.preferredTransform.d == 0.f &&
+        (self.preferredTransform.b == 1.f || self.preferredTransform.b == -1.f) &&
+        (self.preferredTransform.c == 1.f || self.preferredTransform.c == -1.f)) {
         return CGSizeMake(self.naturalSize.height, self.naturalSize.width);
+    } else {
+        return self.naturalSize;
     }
 }
 
