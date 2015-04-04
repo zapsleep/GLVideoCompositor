@@ -20,6 +20,9 @@
 		86B21C301AD0003D000CECB6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B21C2F1AD0003D000CECB6 /* MobileCoreServices.framework */; };
 		86B21C331AD00708000CECB6 /* UIButton+PHAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B21C321AD00708000CECB6 /* UIButton+PHAsset.m */; };
 		86B21C371AD03485000CECB6 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B21C361AD03485000CECB6 /* AVKit.framework */; };
+		86B21C3B1AD03E1A000CECB6 /* GRUVideoCompositor.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B21C3A1AD03E1A000CECB6 /* GRUVideoCompositor.m */; };
+		86B21C3E1AD054EA000CECB6 /* AVAssetTrack+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B21C3D1AD054EA000CECB6 /* AVAssetTrack+Transform.m */; };
+		86B21C401AD0573A000CECB6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B21C3F1AD0573A000CECB6 /* CoreGraphics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,11 @@
 		86B21C311AD00708000CECB6 /* UIButton+PHAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+PHAsset.h"; sourceTree = "<group>"; };
 		86B21C321AD00708000CECB6 /* UIButton+PHAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+PHAsset.m"; sourceTree = "<group>"; };
 		86B21C361AD03485000CECB6 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		86B21C391AD03E1A000CECB6 /* GRUVideoCompositor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRUVideoCompositor.h; sourceTree = "<group>"; };
+		86B21C3A1AD03E1A000CECB6 /* GRUVideoCompositor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRUVideoCompositor.m; sourceTree = "<group>"; };
+		86B21C3C1AD054EA000CECB6 /* AVAssetTrack+Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAssetTrack+Transform.h"; sourceTree = "<group>"; };
+		86B21C3D1AD054EA000CECB6 /* AVAssetTrack+Transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAssetTrack+Transform.m"; sourceTree = "<group>"; };
+		86B21C3F1AD0573A000CECB6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86B21C401AD0573A000CECB6 /* CoreGraphics.framework in Frameworks */,
 				86B21C371AD03485000CECB6 /* AVKit.framework in Frameworks */,
 				86B21C301AD0003D000CECB6 /* MobileCoreServices.framework in Frameworks */,
 				86B21C2E1ACFFC45000CECB6 /* AVFoundation.framework in Frameworks */,
@@ -152,6 +161,10 @@
 		86B21C351AD0346E000CECB6 /* Video composition */ = {
 			isa = PBXGroup;
 			children = (
+				86B21C391AD03E1A000CECB6 /* GRUVideoCompositor.h */,
+				86B21C3A1AD03E1A000CECB6 /* GRUVideoCompositor.m */,
+				86B21C3C1AD054EA000CECB6 /* AVAssetTrack+Transform.h */,
+				86B21C3D1AD054EA000CECB6 /* AVAssetTrack+Transform.m */,
 			);
 			name = "Video composition";
 			sourceTree = "<group>";
@@ -159,6 +172,7 @@
 		86B21C381AD0348B000CECB6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				86B21C3F1AD0573A000CECB6 /* CoreGraphics.framework */,
 				86B21C361AD03485000CECB6 /* AVKit.framework */,
 				86B21C2F1AD0003D000CECB6 /* MobileCoreServices.framework */,
 				86B21C2D1ACFFC45000CECB6 /* AVFoundation.framework */,
@@ -271,7 +285,9 @@
 			files = (
 				86B21C0C1ACFF6B3000CECB6 /* ViewController.m in Sources */,
 				86B21C091ACFF6B3000CECB6 /* AppDelegate.m in Sources */,
+				86B21C3E1AD054EA000CECB6 /* AVAssetTrack+Transform.m in Sources */,
 				86B21C331AD00708000CECB6 /* UIButton+PHAsset.m in Sources */,
+				86B21C3B1AD03E1A000CECB6 /* GRUVideoCompositor.m in Sources */,
 				86B21C061ACFF6B3000CECB6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

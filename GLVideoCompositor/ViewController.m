@@ -13,6 +13,7 @@
 #import <AVKit/AVKit.h>
 
 #import "UIButton+PHAsset.h"
+#import "GRUVideoCompositor.h"
 
 typedef NS_ENUM(NSUInteger, GMAVideoNumber) {
     GMAFirstVideo = 1,
@@ -59,6 +60,28 @@ typedef NS_ENUM(NSUInteger, GMAVideoNumber) {
     }];
 }
 
+- (BOOL)loadAssetPropertiesSynchronously:(AVAsset *)asset {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    __block BOOL isLoaded = NO;
+    NSArray *values = @[@"duration", @"tracks", @"composable"];
+    [asset loadValuesAsynchronouslyForKeys:values completionHandler:^{
+        [values enumerateObjectsUsingBlock:^(NSString *valueStr, NSUInteger idx, BOOL *stop) {
+            isLoaded = YES;
+            if ([asset statusOfValueForKey:valueStr error:nil] == AVKeyValueStatusFailed) {
+                isLoaded = NO;
+                *stop = YES;
+                dispatch_semaphore_signal(semaphore);
+            }
+            
+            dispatch_semaphore_signal(semaphore);
+        }];
+    }];
+    
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 10.f * NSEC_PER_SEC));
+    return isLoaded;
+}
+
 #pragma mark - Actions
 
 - (IBAction)playAction:(id)sender {
@@ -70,7 +93,8 @@ typedef NS_ENUM(NSUInteger, GMAVideoNumber) {
                           otherButtonTitles:nil] show];
     } else {
         AVPlayerViewController *playerVC = [[AVPlayerViewController alloc] init];
-        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:self.firstVideoAsset];
+        GRUVideoCompositor *compositor = [[GRUVideoCompositor alloc] init];
+        AVPlayerItem *playerItem = [compositor compileCompositionWithAssets:@[self.firstVideoAsset, self.secondVideoAsset]];
         AVPlayer *player = [AVPlayer playerWithPlayerItem:playerItem];
         playerVC.player = player;
         
@@ -120,7 +144,7 @@ typedef NS_ENUM(NSUInteger, GMAVideoNumber) {
     PHFetchResult *result = [PHAsset fetchAssetsWithALAssetURLs:@[url] options:nil];
     PHAsset *ph_asset = [result firstObject];
     [[PHImageManager defaultManager] requestAVAssetForVideo:ph_asset options:nil resultHandler:^(AVAsset *asset, AVAudioMix *audioMix, NSDictionary *info) {
-        if (asset) {
+        if (asset && [self loadAssetPropertiesSynchronously:asset]) {
             if (self.currentlyPickingNumber == GMAFirstVideo) {
                 self.firstVideoAsset = asset;
                 [self.firstVideoButton configureImageWithPHAsset:ph_asset];
