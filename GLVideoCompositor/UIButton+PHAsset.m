@@ -14,7 +14,12 @@
 - (void)configureImageWithPHAsset:(id)asset {
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.resizeMode = PHImageRequestOptionsResizeModeExact;
-    [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:self.bounds.size contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *result, NSDictionary *info) {
+    CGSize targetSize = CGSizeMake(self.bounds.size.width * 2, self.bounds.size.height * 2);
+    [[PHImageManager defaultManager] requestImageForAsset:asset
+                                               targetSize:targetSize
+                                              contentMode:PHImageContentModeAspectFill
+                                                  options:options
+                                            resultHandler:^(UIImage *result, NSDictionary *info) {
         BOOL isDegraded = [info[PHImageResultIsDegradedKey] boolValue];
         if (result && !isDegraded) {
             self.imageView.contentMode = UIViewContentModeScaleAspectFill;
