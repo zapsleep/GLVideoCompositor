@@ -23,6 +23,10 @@
 		86B21C3B1AD03E1A000CECB6 /* GRUVideoCompositor.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B21C3A1AD03E1A000CECB6 /* GRUVideoCompositor.m */; };
 		86B21C3E1AD054EA000CECB6 /* AVAssetTrack+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B21C3D1AD054EA000CECB6 /* AVAssetTrack+Transform.m */; };
 		86B21C401AD0573A000CECB6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B21C3F1AD0573A000CECB6 /* CoreGraphics.framework */; };
+		86B21C481AD075A5000CECB6 /* GRUGPUVideoCompositor.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B21C471AD075A5000CECB6 /* GRUGPUVideoCompositor.m */; };
+		86B21C4B1AD075D9000CECB6 /* GRUGPUVideoCompositionInstruction.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B21C4A1AD075D9000CECB6 /* GRUGPUVideoCompositionInstruction.m */; };
+		86B21C501AD07C97000CECB6 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B21C4F1AD07C97000CECB6 /* CoreVideo.framework */; };
+		86B21C531AD0811E000CECB6 /* GRUOGLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B21C521AD0811E000CECB6 /* GRUOGLRenderer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +65,13 @@
 		86B21C3C1AD054EA000CECB6 /* AVAssetTrack+Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVAssetTrack+Transform.h"; sourceTree = "<group>"; };
 		86B21C3D1AD054EA000CECB6 /* AVAssetTrack+Transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAssetTrack+Transform.m"; sourceTree = "<group>"; };
 		86B21C3F1AD0573A000CECB6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		86B21C461AD075A5000CECB6 /* GRUGPUVideoCompositor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRUGPUVideoCompositor.h; sourceTree = "<group>"; };
+		86B21C471AD075A5000CECB6 /* GRUGPUVideoCompositor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRUGPUVideoCompositor.m; sourceTree = "<group>"; };
+		86B21C491AD075D9000CECB6 /* GRUGPUVideoCompositionInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRUGPUVideoCompositionInstruction.h; sourceTree = "<group>"; };
+		86B21C4A1AD075D9000CECB6 /* GRUGPUVideoCompositionInstruction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRUGPUVideoCompositionInstruction.m; sourceTree = "<group>"; };
+		86B21C4F1AD07C97000CECB6 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		86B21C511AD0811E000CECB6 /* GRUOGLRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRUOGLRenderer.h; sourceTree = "<group>"; };
+		86B21C521AD0811E000CECB6 /* GRUOGLRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GRUOGLRenderer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86B21C501AD07C97000CECB6 /* CoreVideo.framework in Frameworks */,
 				86B21C401AD0573A000CECB6 /* CoreGraphics.framework in Frameworks */,
 				86B21C371AD03485000CECB6 /* AVKit.framework in Frameworks */,
 				86B21C301AD0003D000CECB6 /* MobileCoreServices.framework in Frameworks */,
@@ -109,6 +121,7 @@
 		86B21C021ACFF6B3000CECB6 /* GLVideoCompositor */ = {
 			isa = PBXGroup;
 			children = (
+				86B21C451AD06807000CECB6 /* OGL Rendering */,
 				86B21C351AD0346E000CECB6 /* Video composition */,
 				86B21C341AD0070D000CECB6 /* Helpers */,
 				86B21C071ACFF6B3000CECB6 /* AppDelegate.h */,
@@ -165,6 +178,10 @@
 				86B21C3A1AD03E1A000CECB6 /* GRUVideoCompositor.m */,
 				86B21C3C1AD054EA000CECB6 /* AVAssetTrack+Transform.h */,
 				86B21C3D1AD054EA000CECB6 /* AVAssetTrack+Transform.m */,
+				86B21C461AD075A5000CECB6 /* GRUGPUVideoCompositor.h */,
+				86B21C471AD075A5000CECB6 /* GRUGPUVideoCompositor.m */,
+				86B21C491AD075D9000CECB6 /* GRUGPUVideoCompositionInstruction.h */,
+				86B21C4A1AD075D9000CECB6 /* GRUGPUVideoCompositionInstruction.m */,
 			);
 			name = "Video composition";
 			sourceTree = "<group>";
@@ -172,6 +189,7 @@
 		86B21C381AD0348B000CECB6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				86B21C4F1AD07C97000CECB6 /* CoreVideo.framework */,
 				86B21C3F1AD0573A000CECB6 /* CoreGraphics.framework */,
 				86B21C361AD03485000CECB6 /* AVKit.framework */,
 				86B21C2F1AD0003D000CECB6 /* MobileCoreServices.framework */,
@@ -180,6 +198,15 @@
 				86B21C291ACFF86B000CECB6 /* Photos.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		86B21C451AD06807000CECB6 /* OGL Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				86B21C511AD0811E000CECB6 /* GRUOGLRenderer.h */,
+				86B21C521AD0811E000CECB6 /* GRUOGLRenderer.m */,
+			);
+			name = "OGL Rendering";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,9 +312,12 @@
 			files = (
 				86B21C0C1ACFF6B3000CECB6 /* ViewController.m in Sources */,
 				86B21C091ACFF6B3000CECB6 /* AppDelegate.m in Sources */,
+				86B21C481AD075A5000CECB6 /* GRUGPUVideoCompositor.m in Sources */,
 				86B21C3E1AD054EA000CECB6 /* AVAssetTrack+Transform.m in Sources */,
 				86B21C331AD00708000CECB6 /* UIButton+PHAsset.m in Sources */,
+				86B21C4B1AD075D9000CECB6 /* GRUGPUVideoCompositionInstruction.m in Sources */,
 				86B21C3B1AD03E1A000CECB6 /* GRUVideoCompositor.m in Sources */,
+				86B21C531AD0811E000CECB6 /* GRUOGLRenderer.m in Sources */,
 				86B21C061ACFF6B3000CECB6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

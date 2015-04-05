@@ -11,6 +11,8 @@
 #import <UIKit/UIKit.h>
 
 #import "AVAssetTrack+Transform.h"
+#import "GRUGPUVideoCompositionInstruction.h"
+#import "GRUGPUVideoCompositor.h"
 
 @interface GRUVideoCompositor()
 
@@ -140,7 +142,6 @@
 //    self.primaryCompositionAudioTrack = [self.composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
     
     
-    
     return YES;
 }
 
@@ -152,14 +153,16 @@
     NSMutableArray *instructions = @[].mutableCopy;
     for (AVAsset *asset in self.loadedAssets) {
         AVAssetTrack *videoTrack = [asset tracksWithMediaType:AVMediaTypeVideo][0];
-        AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+//        AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
         
         CMTimeRange timeRange = CMTimeRangeMake(insertionTime, videoTrack.timeRange.duration);
-        instruction.timeRange = timeRange;
+//        instruction.timeRange = timeRange;
         
-        AVMutableVideoCompositionLayerInstruction *layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:self.primaryCompositionVideoTrack];
-        [layerInstruction setTransform:[videoTrack properTransformForRenderSize:renderSize] atTime:insertionTime];
-        instruction.layerInstructions = @[layerInstruction];
+//        AVMutableVideoCompositionLayerInstruction *layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:self.primaryCompositionVideoTrack];
+//        [layerInstruction setTransform:[videoTrack properTransformForRenderSize:renderSize] atTime:insertionTime];
+//        instruction.layerInstructions = @[layerInstruction];
+        
+        GRUGPUVideoCompositionInstruction *instruction = [[GRUGPUVideoCompositionInstruction alloc] initForegroundTrackID:self.primaryCompositionVideoTrack.trackID forTimeRange:timeRange withTransform:[videoTrack properTransformForRenderSize:renderSize]];
         
         [instructions addObject:instruction];
         insertionTime = CMTimeAdd(insertionTime, videoTrack.timeRange.duration);
@@ -170,6 +173,7 @@
     }
     videoComposition.renderSize = self.composition.naturalSize;
     videoComposition.frameDuration = CMTimeMake(1, 30);
+    videoComposition.customVideoCompositorClass = [GRUGPUVideoCompositor class];
     
     return videoComposition;
 }

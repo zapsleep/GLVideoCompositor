@@ -8,37 +8,91 @@
 
 #import "AVAssetTrack+Transform.h"
 
+#define isPortrait(X) (X==AVAssetTrackOrientationLeft || X==AVAssetTrackOrientationRight)
+
+typedef NS_ENUM(NSUInteger, AVAssetTrackOrientation) {
+    AVAssetTrackOrientationFree,
+    AVAssetTrackOrientationUp,
+    AVAssetTrackOrientationRight,
+    AVAssetTrackOrientationLeft,
+    AVAssetTrackOrientationDown
+};
+
 @implementation AVAssetTrack (Transform)
 
 - (CGAffineTransform)properTransformForRenderSize:(CGSize)renderSize {
-    CGAffineTransform preferredTransform = self.preferredTransform;
-    CGSize naturalSize = [self properNaturalSize];
-    
-    CGFloat widthRatio = renderSize.width/naturalSize.width;
-    CGFloat heightRatio = renderSize.height/naturalSize.height;
-    CGFloat scale = 1.f;
-    if (widthRatio != 1.f || heightRatio != 1.f) {
-        if (widthRatio >= heightRatio)
-            scale = heightRatio;
-        else
-            scale = widthRatio;
+    AVAssetTrackOrientation orientation = [self orientation];
+    if (orientation == AVAssetTrackOrientationFree) {
+        return CGAffineTransformMake(1, 0, 0, 1, 0, 0);
     }
     
-    CGAffineTransform scaleTransform = CGAffineTransformConcat(preferredTransform, CGAffineTransformMakeScale(scale, scale));
-    CGFloat tx = renderSize.width/2.f - naturalSize.width*scale/2.f;
-    CGFloat ty = renderSize.height/2.f - naturalSize.height*scale/2.f;
-    CGAffineTransform transitionTransform = CGAffineTransformConcat(scaleTransform, CGAffineTransformMakeTranslation(tx, ty));
+    CGSize naturalSize = CGSizeZero;
+    if (isPortrait(orientation)) {
+        naturalSize = CGSizeMake(self.naturalSize.height, self.naturalSize.width);
+    } else {
+        naturalSize = self.naturalSize;
+    }
     
-    return transitionTransform;
+    CGFloat renderRatio = renderSize.width/renderSize.height;
+    CGFloat naturalRatio = naturalSize.width/naturalSize.height;
+    
+    if (renderRatio == naturalRatio) {
+        if (orientation == AVAssetTrackOrientationLeft) {
+            return CGAffineTransformMake(0, -1, 1, 0, 0, 0);
+        } else if (orientation == AVAssetTrackOrientationRight) {
+            return CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+        } else if (orientation == AVAssetTrackOrientationDown) {
+            return CGAffineTransformMake(-1, 0, 0, -1, 0, 0);
+        } else if (orientation == AVAssetTrackOrientationUp) {
+            return CGAffineTransformMake(1, 0, 0, 1, 0, 0);
+        }
+    } else {
+        CGFloat widthRatio = naturalSize.width/renderSize.width;
+        CGFloat heightRatio = naturalSize.height/renderSize.height;
+        
+        if (widthRatio > heightRatio) {
+            CGFloat newHeight = renderSize.width/naturalRatio;
+            CGFloat component = newHeight/renderSize.height;
+            if (orientation == AVAssetTrackOrientationLeft) {
+                return CGAffineTransformMake(0, -1, component, 0, 0, 0);
+            } else if (orientation == AVAssetTrackOrientationRight) {
+                return CGAffineTransformMake(0, 1, -component, 0, 0, 0);
+            } else if (orientation == AVAssetTrackOrientationDown) {
+                return CGAffineTransformMake(-1, 0, 0, -component, 0, 0);
+            } else if (orientation == AVAssetTrackOrientationUp) {
+                return CGAffineTransformMake(1, 0, 0, component, 0, 0);
+            }
+        } else {
+            CGFloat newWidth = naturalRatio*renderSize.height;
+            CGFloat component = newWidth/renderSize.width;
+            if (orientation == AVAssetTrackOrientationLeft) {
+                return CGAffineTransformMake(0, -component, 1, 0, 0, 0);
+            } else if (orientation == AVAssetTrackOrientationRight) {
+                return CGAffineTransformMake(0, 1, -component, 0, 0, 0);
+            } else if (orientation == AVAssetTrackOrientationDown) {
+                return CGAffineTransformMake(-1, 0, 0, -component, 0, 0);
+            } else if (orientation == AVAssetTrackOrientationUp) {
+                return CGAffineTransformMake(1, 0, 0, component, 0, 0);
+            }
+        }
+    }
+    
+    return CGAffineTransformMake(1, 0, 0, 1, 0, 0);
 }
 
-- (CGSize)properNaturalSize {
-    if (self.preferredTransform.a == 0.f && self.preferredTransform.d == 0.f &&
-        (self.preferredTransform.b == 1.f || self.preferredTransform.b == -1.f) &&
-        (self.preferredTransform.c == 1.f || self.preferredTransform.c == -1.f)) {
-        return CGSizeMake(self.naturalSize.height, self.naturalSize.width);
+- (AVAssetTrackOrientation)orientation {
+    if (self.preferredTransform.a > 0.f && self.preferredTransform.d > 0.f) {
+        return AVAssetTrackOrientationUp;
+    } else if (self.preferredTransform.a < 0.f && self.preferredTransform.d < 0.f) {
+        return AVAssetTrackOrientationDown;
+    } else if (self.preferredTransform.a == 0.f && self.preferredTransform.d == 0.f &&
+               (self.preferredTransform.b == 1.f || self.preferredTransform.c == -1.f)) {
+        return AVAssetTrackOrientationLeft;
+    } else if (self.preferredTransform.a == 0.f && self.preferredTransform.d == 0.f &&
+               (self.preferredTransform.b == -1.f || self.preferredTransform.c == 1.f)) {
+        return AVAssetTrackOrientationRight;
     } else {
-        return self.naturalSize;
+        return AVAssetTrackOrientationFree;
     }
 }
 
