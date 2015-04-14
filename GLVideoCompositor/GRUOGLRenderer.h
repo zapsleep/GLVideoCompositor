@@ -13,10 +13,10 @@
 
 enum
 {
-    UNIFORM_Y,
-    UNIFORM_UV,
-    UNIFORM_RENDER_TRANSFORM_Y,
-    UNIFORM_RENDER_TRANSFORM_UV,
+    UNIFORM,
+    UNIFORM_RENDER_TRANSFORM,
+    UNIFORM_TEXEL_WIDTH,
+    UNIFORM_TEXEL_HEIGHT,
    	NUM_UNIFORMS
 };
 GLint uniforms[NUM_UNIFORMS];
@@ -25,15 +25,12 @@ enum
 {
     ATTRIB_VERTEX_Y,
     ATTRIB_TEXCOORD_Y,
-    ATTRIB_VERTEX_UV,
-    ATTRIB_TEXCOORD_UV,
    	NUM_ATTRIBUTES
 };
 
 @interface GRUOGLRenderer : NSObject
 
-@property GLuint programY;
-@property GLuint programUV;
+@property GLuint program;
 @property (nonatomic, assign) CGAffineTransform renderTransform;
 @property (nonatomic, assign) CVOpenGLESTextureCacheRef videoTextureCache;
 @property (nonatomic, strong) EAGLContext *currentContext;

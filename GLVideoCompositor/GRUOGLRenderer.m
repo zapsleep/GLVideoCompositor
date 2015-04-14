@@ -13,28 +13,43 @@ static const char kPassThroughVertexShader[] = {
     attribute vec2 texCoord; \n \
     uniform mat4 renderTransform; \n \
     varying vec2 texCoordVarying; \n \
+    \n \
+    uniform float texelWidth;\n\
+    uniform float texelHeight;\n\
+    \n\
+    varying highp vec2 blurCoordinates[7];\n\
     void main() \n \
     { \n \
-    gl_Position = position * renderTransform; \n \
-    texCoordVarying = texCoord; \n \
+        gl_Position = position * renderTransform; \n \
+        texCoordVarying = texCoord; \n \
+        highp vec2 singleStepOffset = vec2(texelWidth, texelHeight);\n \
+        blurCoordinates[0] = texCoord.xy; \n \
+        blurCoordinates[1] = texCoord.xy + singleStepOffset * 1.407333; \n \
+        blurCoordinates[2] = texCoord.xy - singleStepOffset * 1.407333; \n \
+        blurCoordinates[3] = texCoord.xy + singleStepOffset * 3.294215; \n \
+        blurCoordinates[4] = texCoord.xy - singleStepOffset * 3.294215; \n \
+        blurCoordinates[5] = texCoord.xy + singleStepOffset * 5.077123; \n \
+        blurCoordinates[6] = texCoord.xy - singleStepOffset * 5.077123; \n \
     }"
 };
 
 static const char kPassThroughFragmentShaderY[] = {
     "varying highp vec2 texCoordVarying; \n \
-    uniform sampler2D SamplerY; \n \
+    uniform sampler2D Sampler; \n \
+    \n \
+    varying highp vec2 blurCoordinates[7]; \n \
     void main() \n \
     { \n \
-    gl_FragColor.r = texture2D(SamplerY, texCoordVarying).r; \n \
-    }"
-};
-
-static const char kPassThroughFragmentShaderUV[] = {
-    "varying highp vec2 texCoordVarying; \n \
-    uniform sampler2D SamplerUV; \n \
-    void main() \n \
-    { \n \
-    gl_FragColor.rg = texture2D(SamplerUV, texCoordVarying).rg; \n \
+        gl_FragColor = texture2D(Sampler, texCoordVarying); \n \
+//        highp vec4 sum = vec4(0.0); \n \
+//        sum.rgb += texture2D(Sampler, blurCoordinates[0]).rgb * 0.204164; \n \
+//        sum.rgb += texture2D(Sampler, blurCoordinates[1]).rgb * 0.304005; \n \
+//        sum.rgb += texture2D(Sampler, blurCoordinates[2]).rgb * 0.304005; \n \
+//        sum.rgb += texture2D(Sampler, blurCoordinates[3]).rgb * 0.093913; \n \
+//        sum.rgb += texture2D(Sampler, blurCoordinates[4]).rgb * 0.093913; \n \
+//        sum.rgb += texture2D(Sampler, blurCoordinates[5]).rgb * 0.003913; \n \
+//        sum.rgb += texture2D(Sampler, blurCoordinates[6]).rgb * 0.003913; \n \
+//        gl_FragColor.rgb = sum.rgb; \n \
     }"
 };
 
@@ -72,13 +87,10 @@ static const char kPassThroughFragmentShaderUV[] = {
     
     if (foregroundPixelBuffer != NULL) {
         
-        CVOpenGLESTextureRef foregroundLumaTexture  = [self lumaTextureForPixelBuffer:foregroundPixelBuffer];
-        CVOpenGLESTextureRef foregroundChromaTexture = [self chromaTextureForPixelBuffer:foregroundPixelBuffer];
+        CVOpenGLESTextureRef foregroundTexture  = [self bgraTextureForPixelBuffer:foregroundPixelBuffer];
+        CVOpenGLESTextureRef destTexture = [self bgraTextureForPixelBuffer:destinationPixelBuffer];
         
-        CVOpenGLESTextureRef destLumaTexture = [self lumaTextureForPixelBuffer:destinationPixelBuffer];
-        CVOpenGLESTextureRef destChromaTexture = [self chromaTextureForPixelBuffer:destinationPixelBuffer];
-        
-        glUseProgram(self.programY);
+        glUseProgram(self.program);
         
         // Set the render transform
         GLfloat preferredRenderTransform [] = {
@@ -88,21 +100,25 @@ static const char kPassThroughFragmentShaderUV[] = {
             0.0,					   0.0,										0.0, 1.0,
         };
         
-        glUniformMatrix4fv(uniforms[UNIFORM_RENDER_TRANSFORM_Y], 1, GL_FALSE, preferredRenderTransform);
+        glUniformMatrix4fv(uniforms[UNIFORM_RENDER_TRANSFORM], 1, GL_FALSE, preferredRenderTransform);
+        
+        GLfloat size[] = {1.f/CVPixelBufferGetWidth(destinationPixelBuffer), 1.f/CVPixelBufferGetHeight(destinationPixelBuffer)};
+        glUniform1f(uniforms[UNIFORM_TEXEL_WIDTH], size[0]);
+        glUniform1f(uniforms[UNIFORM_TEXEL_HEIGHT], size[1]);
         
         glBindFramebuffer(GL_FRAMEBUFFER, self.offscreenBufferHandle);
-        glViewport(0, 0, (int)CVPixelBufferGetWidthOfPlane(destinationPixelBuffer, 0), (int)CVPixelBufferGetHeightOfPlane(destinationPixelBuffer, 0));
+        glViewport(0, 0, (int)CVPixelBufferGetWidth(destinationPixelBuffer), (int)CVPixelBufferGetHeight(destinationPixelBuffer));
         
         // Y planes of foreground and background frame are used to render the Y plane of the destination frame
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(CVOpenGLESTextureGetTarget(foregroundLumaTexture), CVOpenGLESTextureGetName(foregroundLumaTexture));
+        glBindTexture(GL_TEXTURE_2D, CVOpenGLESTextureGetName(foregroundTexture));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         
         // Attach the destination texture as a color attachment to the off screen frame buffer
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget(destLumaTexture), CVOpenGLESTextureGetName(destLumaTexture), 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget(destTexture), CVOpenGLESTextureGetName(destTexture), 0);
         
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
@@ -127,7 +143,7 @@ static const char kPassThroughFragmentShaderUV[] = {
             0.5 + quadVertexData1[6]/2, 0.5 + quadVertexData1[7]/2,
         };
         
-        glUniform1i(uniforms[UNIFORM_Y], 0);
+        glUniform1i(uniforms[UNIFORM], 0);
         
         glVertexAttribPointer(ATTRIB_VERTEX_Y, 2, GL_FLOAT, 0, 0, quadVertexData1);
         glEnableVertexAttribArray(ATTRIB_VERTEX_Y);
@@ -136,47 +152,8 @@ static const char kPassThroughFragmentShaderUV[] = {
         glEnableVertexAttribArray(ATTRIB_TEXCOORD_Y);
         
         // Blend function to draw the foreground frame
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ZERO);
-        
-        // Draw the foreground frame
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        
-        // Perform similar operations as above for the UV plane
-        glUseProgram(self.programUV);
-        
-        glUniformMatrix4fv(uniforms[UNIFORM_RENDER_TRANSFORM_UV], 1, GL_FALSE, preferredRenderTransform);
-        
-        // UV planes of foreground and background frame are used to render the UV plane of the destination frame
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(CVOpenGLESTextureGetTarget(foregroundChromaTexture), CVOpenGLESTextureGetName(foregroundChromaTexture));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        
-        glViewport(0, 0, (int)CVPixelBufferGetWidthOfPlane(destinationPixelBuffer, 1), (int)CVPixelBufferGetHeightOfPlane(destinationPixelBuffer, 1));
-        
-        // Attach the destination texture as a color attachment to the off screen frame buffer
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget(destChromaTexture), CVOpenGLESTextureGetName(destChromaTexture), 0);
-        
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
-            goto bail;
-        }
-        
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
-        glUniform1i(uniforms[UNIFORM_UV], 1);
-        
-        glVertexAttribPointer(ATTRIB_VERTEX_UV, 2, GL_FLOAT, 0, 0, quadVertexData1);
-        glEnableVertexAttribArray(ATTRIB_VERTEX_UV);
-        
-        glVertexAttribPointer(ATTRIB_TEXCOORD_UV, 2, GL_FLOAT, 0, 0, quadTextureData1);
-        glEnableVertexAttribArray(ATTRIB_TEXCOORD_UV);
-        
-        glBlendFunc(GL_ONE, GL_ZERO);
+//        glEnable(GL_BLEND);
+//        glBlendFunc(GL_ONE, GL_ZERO);
         
         // Draw the foreground frame
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -184,10 +161,8 @@ static const char kPassThroughFragmentShaderUV[] = {
         glFlush();
         
     bail:
-        CFRelease(foregroundLumaTexture);
-        CFRelease(foregroundChromaTexture);
-        CFRelease(destLumaTexture);
-        CFRelease(destChromaTexture);
+        CFRelease(foregroundTexture);
+        CFRelease(destTexture);
         
         // Periodic texture cache flush every frame
         CVOpenGLESTextureCacheFlush(self.videoTextureCache, 0);
@@ -212,6 +187,38 @@ static const char kPassThroughFragmentShaderUV[] = {
     
     glGenFramebuffers(1, &_offscreenBufferHandle);
     glBindFramebuffer(GL_FRAMEBUFFER, _offscreenBufferHandle);
+}
+
+- (CVOpenGLESTextureRef)bgraTextureForPixelBuffer:(CVPixelBufferRef)pixelBuffer {
+    CVOpenGLESTextureRef bgraTexture = NULL;
+    CVReturn err;
+    
+    if (!_videoTextureCache) {
+        NSLog(@"No video texture cache");
+        goto bail;
+    }
+    
+    CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
+    
+    err = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
+                                                       _videoTextureCache,
+                                                       pixelBuffer,
+                                                       NULL,
+                                                       GL_TEXTURE_2D, 
+                                                       GL_RGBA,
+                                                       (int)CVPixelBufferGetWidth(pixelBuffer),
+                                                       (int)CVPixelBufferGetHeight(pixelBuffer),
+                                                       GL_BGRA,
+                                                       GL_UNSIGNED_BYTE,
+                                                       0,
+                                                       &bgraTexture);
+    
+    if (!bgraTexture || err) {
+        NSLog(@"Error creating BGRA texture using CVOpenGLESTextureCacheCreateTextureFromImage %d", err);
+    }
+    
+bail:
+    return bgraTexture;
 }
 
 - (CVOpenGLESTextureRef)lumaTextureForPixelBuffer:(CVPixelBufferRef)pixelBuffer
@@ -290,12 +297,11 @@ bail:
 
 - (BOOL)loadShaders
 {
-    GLuint vertShader, fragShaderY, fragShaderUV;
-    NSString *vertShaderSource, *fragShaderYSource, *fragShaderUVSource;
+    GLuint vertShader, fragShader;
+    NSString *vertShaderSource, *fragShaderSource;
     
     // Create the shader program.
-    _programY = glCreateProgram();
-    _programUV = glCreateProgram();
+    _program = glCreateProgram();
     
     // Create and compile the vertex shader.
     vertShaderSource = [NSString stringWithCString:kPassThroughVertexShader encoding:NSUTF8StringEncoding];
@@ -305,86 +311,56 @@ bail:
     }
     
     // Create and compile Y fragment shader.
-    fragShaderYSource = [NSString stringWithCString:kPassThroughFragmentShaderY encoding:NSUTF8StringEncoding];
-    if (![self compileShader:&fragShaderY type:GL_FRAGMENT_SHADER source:fragShaderYSource]) {
+    fragShaderSource = [NSString stringWithCString:kPassThroughFragmentShaderY encoding:NSUTF8StringEncoding];
+    if (![self compileShader:&fragShader type:GL_FRAGMENT_SHADER source:fragShaderSource]) {
         NSLog(@"Failed to compile Y fragment shader");
         return NO;
     }
     
-    // Create and compile UV fragment shader.
-    fragShaderUVSource = [NSString stringWithCString:kPassThroughFragmentShaderUV encoding:NSUTF8StringEncoding];
-    if (![self compileShader:&fragShaderUV type:GL_FRAGMENT_SHADER source:fragShaderUVSource]) {
-        NSLog(@"Failed to compile UV fragment shader");
-        return NO;
-    }
-    
     // Attach vertex shader to programY.
-    glAttachShader(_programY, vertShader);
+    glAttachShader(_program, vertShader);
     
     // Attach fragment shader to programY.
-    glAttachShader(_programY, fragShaderY);
-    
-    // Attach vertex shader to programY.
-    glAttachShader(_programUV, vertShader);
-    
-    // Attach fragment shader to programY.
-    glAttachShader(_programUV, fragShaderUV);
+    glAttachShader(_program, fragShader);
     
     
     // Bind attribute locations. This needs to be done prior to linking.
     
-    glBindAttribLocation(_programY, ATTRIB_VERTEX_Y, "position");
-    glBindAttribLocation(_programY, ATTRIB_TEXCOORD_Y, "texCoord");
-    glBindAttribLocation(_programUV, ATTRIB_VERTEX_UV, "position");
-    glBindAttribLocation(_programUV, ATTRIB_TEXCOORD_UV, "texCoord");
+    glBindAttribLocation(_program, ATTRIB_VERTEX_Y, "position");
+    glBindAttribLocation(_program, ATTRIB_TEXCOORD_Y, "texCoord");
     
     // Link the program.
-    if (![self linkProgram:_programY] || ![self linkProgram:_programUV]) {
-        NSLog(@"Failed to link program: %d and %d", _programY, _programUV);
+    if (![self linkProgram:_program]) {
+        NSLog(@"Failed to link program: %d", _program);
         
         if (vertShader) {
             glDeleteShader(vertShader);
             vertShader = 0;
         }
-        if (fragShaderY) {
-            glDeleteShader(fragShaderY);
-            fragShaderY = 0;
+        if (fragShader) {
+            glDeleteShader(fragShader);
+            fragShader = 0;
         }
-        if (fragShaderUV) {
-            glDeleteShader(fragShaderUV);
-            fragShaderUV = 0;
-        }
-        if (_programY) {
-            glDeleteProgram(_programY);
-            _programY = 0;
-        }
-        if (_programUV) {
-            glDeleteProgram(_programUV);
-            _programUV = 0;
+        if (_program) {
+            glDeleteProgram(_program);
+            _program = 0;
         }
         
         return NO;
     }
     
     // Get uniform locations.
-    uniforms[UNIFORM_Y] = glGetUniformLocation(_programY, "SamplerY");
-    uniforms[UNIFORM_UV] = glGetUniformLocation(_programUV, "SamplerUV");
-    uniforms[UNIFORM_RENDER_TRANSFORM_Y] = glGetUniformLocation(_programY, "renderTransform");
-    uniforms[UNIFORM_RENDER_TRANSFORM_UV] = glGetUniformLocation(_programUV, "renderTransform");
+    uniforms[UNIFORM] = glGetUniformLocation(_program, "Sampler");
+    uniforms[UNIFORM_RENDER_TRANSFORM] = glGetUniformLocation(_program, "renderTransform");
     
     // Release vertex and fragment shaders.
     if (vertShader) {
-        glDetachShader(_programY, vertShader);
-        glDetachShader(_programUV, vertShader);
+        glDetachShader(_program, vertShader);
         glDeleteShader(vertShader);
     }
-    if (fragShaderY) {
-        glDetachShader(_programY, fragShaderY);
-        glDeleteShader(fragShaderY);
-    }
-    if (fragShaderUV) {
-        glDetachShader(_programUV, fragShaderUV);
-        glDeleteShader(fragShaderUV);
+    if (fragShader) {
+        glDetachShader(_program, fragShader);
+        glDeleteShader(fragShader);
     }
     
     return YES;
